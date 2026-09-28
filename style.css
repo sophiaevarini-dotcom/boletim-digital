@@ -1,0 +1,172 @@
+/* ===== VARIÁVEIS DE COR (facilita trocar depois) ===== */
+:root {
+  --fundo: #0f172a;          /* fundo escuro principal */
+  --fundo-card: #1e293b;     /* fundo dos cards, um pouco mais claro */
+  --azul-principal: #3b82f6; /* azul médio (cor principal) */
+  --azul-claro: #60a5fa;     /* azul mais claro (destaques) */
+  --azul-suave: #1e3a8a;     /* azul escuro (bordas discretas) */
+  --texto: #e2e8f0;          /* texto claro */
+  --texto-suave: #94a3b8;    /* texto secundário */
+}
+
+/* ===== RESET BÁSICO ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+  padding: 16px;
+  min-height: 100vh;
+}
+
+/* ===== CABEÇALHO ===== */
+.cabecalho {
+  text-align: center;
+  padding: 24px 12px;
+  border-bottom: 2px solid var(--azul-principal);
+  margin-bottom: 24px;
+}
+
+.cabecalho h1 {
+  font-size: 2rem;
+  color: var(--azul-claro);
+  letter-spacing: 1px;
+}
+
+.subtitulo {
+  color: var(--texto-suave);
+  margin-top: 6px;
+  font-size: 1rem;
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ===== CARDS DE RESUMO ===== */
+.cards {
+  display: grid;
+  /* Em celular: 1 coluna. Em telas maiores: várias colunas automáticas */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background-color: var(--fundo-card);
+  border: 1px solid var(--azul-principal); /* borda azul fina */
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px); /* leve efeito ao passar o mouse */
+}
+
+.card .rotulo {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.card .valor {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--azul-claro);
+}
+
+.card .extra {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  margin-top: 4px;
+}
+
+/* ===== ÁREA DA TABELA ===== */
+.tabela-area h2 {
+  color: var(--azul-claro);
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+/* Envolve a tabela para permitir rolagem horizontal em telas pequenas */
+.tabela-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--azul-suave);
+}
+
+table.boletim {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px; /* força rolagem em telas estreitas */
+  background-color: var(--fundo-card);
+}
+
+table.boletim th,
+table.boletim td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--azul-suave);
+  font-size: 0.9rem;
+}
+
+table.boletim th {
+  background-color: var(--azul-suave);
+  color: var(--texto);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+table.boletim td:first-child,
+table.boletim th:first-child {
+  text-align: left; /* nome da disciplina alinhado à esquerda */
+}
+
+table.boletim tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* ===== SITUAÇÕES (cores em tons de azul) ===== */
+.situacao-bom {
+  color: var(--azul-claro);   /* azul claro para "Bom desempenho" */
+  font-weight: 600;
+}
+
+.situacao-atencao {
+  color: var(--texto-suave);  /* azul acinzentado para "Atenção" */
+  font-weight: 600;
+}
+
+.situacao-indisponivel {
+  color: var(--texto-suave);
+  font-style: italic;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 600px) {
+  .cabecalho h1 {
+    font-size: 1.5rem;
+  }
+
+  .card .valor {
+    font-size: 1.3rem;
+  }
+
+  table.boletim th,
+  table.boletim td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+}
