@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <!-- Garante que o site funcione bem em celular -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boletim Digital</title>
-  <!-- Liga o arquivo de estilos -->
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -25,38 +13,92 @@
   <!-- CABEÇALHO -->
   <header class="cabecalho">
     <h1>Boletim Digital</h1>
-    <p class="subtitulo">8º Ano — Estudante Exemplo</p>
+    <p class="subtitulo">8º Ano — Turma 8C — Nº 30</p>
   </header>
 
   <main class="conteudo">
 
-    <!-- ÁREA DOS CARDS DE RESUMO -->
-    <section class="cards" id="cardsResumo">
-      <!-- Os cards serão preenchidos pelo JavaScript -->
+    <!-- ÁREA DE ACESSO COM PIN -->
+    <section class="area-acesso" id="areaAcesso">
+      <div class="card-acesso">
+        <h2>Acesso ao Boletim</h2>
+        <p class="info-aluno"><strong>Turma:</strong> 8C | <strong>Chamada:</strong> 30</p>
+        <div class="campo-pin">
+          <label for="pinInput">Digite seu PIN:</label>
+          <input type="password" id="pinInput" placeholder="PIN" maxlength="10" autocomplete="off" />
+        </div>
+        <button id="btnEntrar" class="btn-primario">Entrar</button>
+        <p id="mensagemAcesso" class="mensagem-status"></p>
+      </div>
     </section>
 
-    <!-- ÁREA DA TABELA -->
-    <section class="tabela-area">
-      <h2>Notas por disciplina</h2>
+    <!-- ÁREA DO BOLETIM (OCULTA ATÉ O LOGIN) -->
+    <div id="areaBoletim" class="area-boletim" style="display: none;">
 
-      <!-- Tabela responsiva: em telas pequenas ela rola na horizontal -->
-      <div class="tabela-wrapper">
-        <table class="boletim">
-          <thead>
-            <tr>
-              <th>Disciplina</th>
-              <th>1º Tri</th>
-              <th>2º Tri</th>
-              <th>3º Tri</th>
-              <th>Média</th>
-              <th>Faltas</th>
-              <th>Situação</th>
-            </tr>
-          </thead>
-          <tbody id="corpoTabela">
-            <!-- As linhas serão criadas pelo JavaScript -->
-          </tbody>
-        </table>
+      <div class="barra-acoes">
+        <button id="btnAlterarDados" class="btn-secundario">Alterar dados</button>
+      </div>
+
+      <!-- ÁREA DOS CARDS DE RESUMO -->
+      <section class="cards" id="cardsResumo">
+        <!-- Os cards serão preenchidos pelo JavaScript -->
+      </section>
+
+      <!-- ÁREA DA TABELA -->
+      <section class="tabela-area">
+        <h2>Notas por disciplina</h2>
+
+        <!-- Tabela responsiva: em telas pequenas ela rola na horizontal -->
+        <div class="tabela-wrapper">
+          <table class="boletim">
+            <thead>
+              <tr>
+                <th>Disciplina</th>
+                <th>1º Tri</th>
+                <th>2º Tri</th>
+                <th>3º Tri</th>
+                <th>Média</th>
+                <th>Faltas</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabela">
+              <!-- As linhas serão criadas pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- MODAL / ÁREA DE EDIÇÃO DAS NOTAS -->
+    <section id="areaEdicao" class="modal-edicao" style="display: none;">
+      <div class="conteudo-modal">
+        <h2>Editar Notas e Faltas</h2>
+        <p class="instrucao-edicao">Digite valores de 0 a 10 para notas e números inteiros para faltas.</p>
+        <div class="tabela-wrapper">
+          <table class="tabela-edicao">
+            <thead>
+              <tr>
+                <th>Disciplina</th>
+                <th>1º Tri</th>
+                <th>2º Tri</th>
+                <th>3º Tri</th>
+                <th>Faltas 1º Tri</th>
+                <th>Faltas 2º Tri</th>
+                <th>Faltas 3º Tri</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabelaEdicao">
+              <!-- Linhas de edição criadas pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <p id="mensagemEdicao" class="mensagem-status"></p>
+        <div class="acoes-edicao">
+          <button id="btnSalvar" class="btn-primario">Salvar alterações</button>
+          <button id="btnCancelarEdicao" class="btn-secundario">Cancelar</button>
+        </div>
       </div>
     </section>
 
