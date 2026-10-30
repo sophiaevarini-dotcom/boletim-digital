@@ -89,4 +89,262 @@ body {
 
 .campo-pin label {
   display: block;
-  margin-bottom: 6px
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--texto);
+}
+
+.campo-pin input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--azul-suave);
+  background-color: var(--fundo);
+  color: var(--texto);
+  font-size: 1rem;
+  outline: none;
+}
+
+.campo-pin input:focus {
+  border-color: var(--azul-principal);
+}
+
+/* ===== BOTÕES ===== */
+.btn-primario {
+  background-color: var(--azul-principal);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primario:hover {
+  background-color: var(--azul-claro);
+  color: var(--fundo);
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--azul-claro);
+  border: 1px solid var(--azul-claro);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secundario:hover {
+  background-color: var(--azul-claro);
+  color: var(--fundo);
+}
+
+.barra-acoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.mensagem-status {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  min-height: 20px;
+}
+
+.mensagem-status.erro {
+  color: var(--erro);
+}
+
+.mensagem-status.sucesso {
+  color: var(--sucesso);
+}
+
+/* ===== CARDS DE RESUMO ===== */
+.cards {
+  display: grid;
+  /* Em celular: 1 coluna. Em telas maiores: várias colunas automáticas */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.card {
+  background-color: var(--fundo-card);
+  border: 1px solid var(--azul-principal); /* borda azul fina */
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px); /* leve efeito ao passar o mouse */
+}
+
+.card .rotulo {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.card .valor {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--azul-claro);
+}
+
+.card .extra {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  margin-top: 4px;
+}
+
+/* ===== ÁREA DA TABELA ===== */
+.tabela-area h2 {
+  color: var(--azul-claro);
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+}
+
+/* Envolve a tabela para permitir rolagem horizontal em telas pequenas */
+.tabela-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--azul-suave);
+}
+
+table.boletim,
+table.tabela-edicao {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px; /* força rolagem em telas estreitas */
+  background-color: var(--fundo-card);
+}
+
+table.boletim th,
+table.boletim td,
+table.tabela-edicao th,
+table.tabela-edicao td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--azul-suave);
+  font-size: 0.9rem;
+}
+
+table.boletim th,
+table.tabela-edicao th {
+  background-color: var(--azul-suave);
+  color: var(--texto);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+table.boletim td:first-child,
+table.boletim th:first-child,
+table.tabela-edicao td:first-child,
+table.tabela-edicao th:first-child {
+  text-align: left; /* nome da disciplina alinhado à esquerda */
+}
+
+table.boletim tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* ===== MODAL DE EDIÇÃO ===== */
+.modal-edicao {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.conteudo-modal {
+  background-color: var(--fundo-card);
+  border: 1px solid var(--azul-principal);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.conteudo-modal h2 {
+  color: var(--azul-claro);
+  margin-bottom: 8px;
+}
+
+.instrucao-edicao {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+table.tabela-edicao input {
+  width: 60px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--azul-suave);
+  background-color: var(--fundo);
+  color: var(--texto);
+  text-align: center;
+}
+
+table.tabela-edicao input.input-invalido {
+  border-color: var(--erro);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.acoes-edicao {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* ===== SITUAÇÕES (cores em tons de azul) ===== */
+.situacao-bom {
+  color: var(--azul-claro);   /* azul claro para "Bom desempenho" */
+  font-weight: 600;
+}
+
+.situacao-atencao {
+  color: var(--texto-suave);  /* azul acinzentado para "Atenção" */
+  font-weight: 600;
+}
+
+.situacao-indisponivel {
+  color: var(--texto-suave);
+  font-style: italic;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 600px) {
+  .cabecalho h1 {
+    font-size: 1.5rem;
+  }
+
+  .card .valor {
+    font-size: 1.3rem;
+  }
+
+  table.boletim th,
+  table.boletim td,
+  table.tabela-edicao th,
+  table.tabela-edicao td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+}
