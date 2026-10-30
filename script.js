@@ -26,4 +26,459 @@ let disciplinas = [
   { disciplina: "Língua Inglesa",           tri1: 86,   tri2: "8,1", tri3: 8.7,  faltas: [1, 0, 0] },
   { disciplina: "Arte",                     tri1: 9.0,  tri2: 92,    tri3: null, faltas: [1, 1, 0] },
   { disciplina: "Educação Física",          tri1: 95,   tri2: 9.0,   tri3: "9,4",faltas: [0, 1, 0] },
-  { disciplina: "Educação Digital",         tri1: 88
+  { disciplina: "Educação Digital",         tri1: 88,   tri2: 9.1,   tri3: 93,   faltas: [1, 0, 1] },
+  { disciplina: "Educação Financeira",      tri1: 74,   tri2: "7,8", tri3: null, faltas: [1, 1, 1] },
+  { disciplina: "Estudo Orientado",         tri1: 8.0,  tri2: 83,    tri3: "8,5",faltas: [0, 1, 0] },
+  { disciplina: "Redação e Leitura",        tri1: 62,   tri2: "6,8", tri3: null, faltas: [2, 1, 1] },
+  { disciplina: "Pensamento Lógico",        tri1: 48,   tri2: 5.6,   tri3: "6,0",faltas: [2, 2, 1] },
+  { disciplina: "Literatura Arte e Movimento", tri1: "7,7", tri2: 80, tri3: null, faltas: [1, 0, 1] },
+  { disciplina: "Práticas Experimentais",   tri1: 58,   tri2: "6,2", tri3: 6.4,  faltas: [1, 1, 1] }
+];
+
+// Média mínima de referência
+const MEDIA_MINIMA = 6.0;
+
+// ------------------------------------------------------------
+// NORMALIZAÇÃO E CÁLCULOS
+// ------------------------------------------------------------
+function normalizarNota(valor) {
+  if (valor === null || valor === undefined || valor === "") {
+    return null;
+  }
+
+  let numero = typeof valor === "string" ? parseFloat(valor.replace(",", ".")) : valor;
+
+  if (isNaN(numero)) {
+    return null;
+  }
+
+  if (numero >= 0 && numero <= 10) {
+    return numero;
+  }
+
+  if (numero > 10 && numero <= 100) {
+    return numero / 10;
+  }
+
+  return null;
+}
+
+function calcularMedia(notas) {
+  const validas = notas.filter(function (n) {
+    return n !== null;
+  });
+
+  if (validas.length === 0) {
+    return null;
+  }
+
+  const soma = validas.reduce(function (total, n) {
+    return total + n;
+  }, 0);
+
+  return soma / validas.length;
+}
+
+function somarFaltas(faltas) {
+  if (!Array.isArray(faltas)) return 0;
+  return faltas.reduce(function (total, f) {
+    const num = parseInt(f, 10);
+    return total + (isNaN(num) ? 0 : num);
+  }, 0);
+}
+
+function definirSituacao(media) {
+  if (media === null) {
+    return "Nota ainda não disponível";
+  }
+  if (media >= MEDIA_MINIMA) {
+    return "Bom desempenho";
+  }
+  return "Atenção";
+}
+
+function formatarNota(n) {
+  if (n === null) return "—";
+  return n.toFixed(1).replace(".", ",");
+}
+
+// ------------------------------------------------------------
+// ELEMENTOS DO DOM
+// ------------------------------------------------------------
+const corpoTabela = document.getElementById("corpoTabela");
+const areaCards = document.getElementById("cardsResumo");
+const areaAcesso = document.getElementById("areaAcesso");
+const areaBoletim = document.getElementById("areaBoletim");
+const areaEdicao = document.getElementById("areaEdicao");
+const corpoTabelaEdicao = document.getElementById("corpoTabelaEdicao");
+
+const pinInput = document.getElementById("pinInput");
+const btnEntrar = document.getElementById("btnEntrar");
+const mensagemAcesso = document.getElementById("mensagemAcesso");
+
+const btnAlterarDados = document.getElementById("btnAlterarDados");
+const btnSalvar = document.getElementById("btnSalvar");
+const btnCancelarEdicao = document.getElementById("btnCancelarEdicao");
+const mensagemEdicao = document.getElementById("mensagemEdicao");
+
+// ------------------------------------------------------------
+// RENDERIZAÇÃO DA TABELA E CARDS
+// ------------------------------------------------------------
+function montarTabela() {
+  corpoTabela.innerHTML = "";
+
+  disciplinas.forEach(function (item) {
+    const n1 = normalizarNota(item.tri1);
+    const n2 = normalizarNota(item.tri2);
+    const n3 = normalizarNota(item.tri3);
+
+    const media = calcularMedia([n1, n2, n3]);
+    const totalFaltas = somarFaltas(item.faltas);
+    const situacao = definirSituacao(media);
+
+    let classeSituacao = "situacao-indisponivel";
+    if (situacao === "Bom desempenho") classeSituacao = "situacao-bom";
+    else if (situacao === "Atenção") classeSituacao = "situacao-atencao";
+
+    const linha = document.createElement("tr");
+
+    const tdNome = document.createElement("td");
+    tdNome.textContent = item.disciplina;
+
+    const td1 = document.createElement("td");
+    td1.textContent = formatarNota(n1);
+
+    const td2 = document.createElement("td");
+    td2.textContent = formatarNota(n2);
+
+    const td3 = document.createElement("td");
+    td3.textContent = formatarNota(n3);
+
+    const tdMedia = document.createElement("td");
+    tdMedia.textContent = media === null ? "—" : formatarNota(media);
+
+    const tdFaltas = document.createElement("td");
+    tdFaltas.textContent = totalFaltas;
+
+    const tdSit = document.createElement("td");
+    tdSit.className = classeSituacao;
+    tdSit.textContent = situacao;
+
+    linha.appendChild(tdNome);
+    linha.appendChild(td1);
+    linha.appendChild(td2);
+    linha.appendChild(td3);
+    linha.appendChild(tdMedia);
+    linha.appendChild(tdFaltas);
+    linha.appendChild(tdSit);
+
+    corpoTabela.appendChild(linha);
+  });
+}
+
+function montarCards() {
+  areaCards.innerHTML = "";
+
+  const medias = [];
+  let totalFaltas = 0;
+  let bomDesempenho = 0;
+  let atencao = 0;
+
+  disciplinas.forEach(function (item) {
+    const n1 = normalizarNota(item.tri1);
+    const n2 = normalizarNota(item.tri2);
+    const n3 = normalizarNota(item.tri3);
+    const media = calcularMedia([n1, n2, n3]);
+
+    if (media !== null) {
+      medias.push(media);
+      if (media >= MEDIA_MINIMA) bomDesempenho++;
+      else atencao++;
+    }
+
+    totalFaltas += somarFaltas(item.faltas);
+  });
+
+  const mediaGeral = medias.length > 0
+    ? medias.reduce((t, m) => t + m, 0) / medias.length
+    : null;
+
+  const frequenciaDemonstrativa = 92;
+
+  const cards = [
+    { rotulo: "Média geral", valor: mediaGeral === null ? "—" : formatarNota(mediaGeral), extra: "" },
+    { rotulo: "Total de faltas", valor: totalFaltas, extra: "" },
+    { rotulo: "Bom desempenho", valor: bomDesempenho, extra: "disciplinas" },
+    { rotulo: "Precisam de atenção", valor: atencao, extra: "disciplinas" },
+    { rotulo: "Frequência", valor: frequenciaDemonstrativa + "%", extra: "Frequência adequada" }
+  ];
+
+  cards.forEach(function (c) {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    const divRotulo = document.createElement("div");
+    divRotulo.className = "rotulo";
+    divRotulo.textContent = c.rotulo;
+
+    const divValor = document.createElement("div");
+    divValor.className = "valor";
+    divValor.textContent = c.valor;
+
+    const divExtra = document.createElement("div");
+    divExtra.className = "extra";
+    divExtra.textContent = c.extra;
+
+    div.appendChild(divRotulo);
+    div.appendChild(divValor);
+    div.appendChild(divExtra);
+
+    areaCards.appendChild(div);
+  });
+}
+
+function atualizarTela() {
+  montarCards();
+  montarTabela();
+}
+
+// ------------------------------------------------------------
+// API — CONEXÃO E LOGIN
+// ------------------------------------------------------------
+async function entrarNoBoletim() {
+  const pinDigitado = pinInput.value.trim();
+
+  if (!pinDigitado) {
+    mensagemAcesso.className = "mensagem-status erro";
+    mensagemAcesso.textContent = "Por favor, digite seu PIN.";
+    return;
+  }
+
+  mensagemAcesso.className = "mensagem-status";
+  mensagemAcesso.textContent = "Conectando...";
+
+  try {
+    const resposta = await fetch(`${CONFIG_ALUNO.apiUrl}/api/v1/boletins/abrir`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        turma: CONFIG_ALUNO.turma,
+        numero_chamada: CONFIG_ALUNO.numeroChamada,
+        pin: pinDigitado
+      })
+    });
+
+    if (resposta.status === 401) {
+      mensagemAcesso.className = "mensagem-status erro";
+      mensagemAcesso.textContent = "Turma, chamada ou PIN inválidos.";
+      return;
+    }
+
+    if (resposta.status === 429) {
+      mensagemAcesso.className = "mensagem-status erro";
+      mensagemAcesso.textContent = "Muitas tentativas. Aguarde um minuto e tente novamente.";
+      return;
+    }
+
+    if (!resposta.ok) {
+      mensagemAcesso.className = "mensagem-status erro";
+      mensagemAcesso.textContent = "Não foi possível conectar ao servidor. Tente novamente.";
+      return;
+    }
+
+    const resultado = await resposta.json();
+
+    // PIN mantido somente em memória
+    pinSessao = pinDigitado;
+    pinInput.value = "";
+
+    if (resultado.dados && Array.isArray(resultado.dados.disciplinas) && resultado.dados.disciplinas.length > 0) {
+      disciplinas = resultado.dados.disciplinas;
+    }
+
+    areaAcesso.style.display = "none";
+    areaBoletim.style.display = "block";
+    mensagemAcesso.textContent = "";
+
+    atualizarTela();
+
+  } catch (erro) {
+    mensagemAcesso.className = "mensagem-status erro";
+    mensagemAcesso.textContent = "Não foi possível conectar ao servidor. Tente novamente.";
+  }
+}
+
+// ------------------------------------------------------------
+// EDIÇÃO E VALIDAÇÃO DE DADOS
+// ------------------------------------------------------------
+function abrirEdicao() {
+  corpoTabelaEdicao.innerHTML = "";
+  mensagemEdicao.textContent = "";
+
+  disciplinas.forEach(function (item, index) {
+    const n1 = normalizarNota(item.tri1);
+    const n2 = normalizarNota(item.tri2);
+    const n3 = normalizarNota(item.tri3);
+
+    const f1 = Array.isArray(item.faltas) ? item.faltas[0] ?? 0 : 0;
+    const f2 = Array.isArray(item.faltas) ? item.faltas[1] ?? 0 : 0;
+    const f3 = Array.isArray(item.faltas) ? item.faltas[2] ?? 0 : 0;
+
+    const tr = document.createElement("tr");
+
+    const tdNome = document.createElement("td");
+    tdNome.textContent = item.disciplina;
+
+    tr.appendChild(tdNome);
+
+    const inputsInfo = [
+      { id: `tri1_${index}`, val: n1 === null ? "" : n1 },
+      { id: `tri2_${index}`, val: n2 === null ? "" : n2 },
+      { id: `tri3_${index}`, val: n3 === null ? "" : n3 },
+      { id: `f1_${index}`, val: f1 },
+      { id: `f2_${index}`, val: f2 },
+      { id: `f3_${index}`, val: f3 }
+    ];
+
+    inputsInfo.forEach(info => {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.id = info.id;
+      inp.value = info.val;
+      td.appendChild(inp);
+      tr.appendChild(td);
+    });
+
+    corpoTabelaEdicao.appendChild(tr);
+  });
+
+  areaEdicao.style.display = "flex";
+}
+
+function fecharEdicao() {
+  areaEdicao.style.display = "none";
+  mensagemEdicao.textContent = "";
+}
+
+function validarNotaInput(valTexto) {
+  const texto = valTexto.trim();
+  if (texto === "") return { valido: true, valor: null };
+
+  const normalizado = texto.replace(",", ".");
+  const num = Number(normalizado);
+
+  if (isNaN(num) || num < 0 || num > 10) {
+    return { valido: false };
+  }
+
+  return { valido: true, valor: num };
+}
+
+function validarFaltaInput(valTexto) {
+  const texto = valTexto.trim();
+  if (texto === "") return { valido: false };
+
+  const num = Number(texto);
+
+  if (isNaN(num) || !Number.isInteger(num) || num < 0) {
+    return { valido: false };
+  }
+
+  return { valido: true, valor: num };
+}
+
+async function salvarEdicao() {
+  mensagemEdicao.className = "mensagem-status";
+  mensagemEdicao.textContent = "";
+
+  let temErro = false;
+  const novasDisciplinas = [];
+
+  for (let i = 0; i < disciplinas.length; i++) {
+    const elN1 = document.getElementById(`tri1_${i}`);
+    const elN2 = document.getElementById(`tri2_${i}`);
+    const elN3 = document.getElementById(`tri3_${i}`);
+    const elF1 = document.getElementById(`f1_${i}`);
+    const elF2 = document.getElementById(`f2_${i}`);
+    const elF3 = document.getElementById(`f3_${i}`);
+
+    [elN1, elN2, elN3, elF1, elF2, elF3].forEach(el => el.classList.remove("input-invalido"));
+
+    const resN1 = validarNotaInput(elN1.value);
+    const resN2 = validarNotaInput(elN2.value);
+    const resN3 = validarNotaInput(elN3.value);
+
+    const resF1 = validarFaltaInput(elF1.value);
+    const resF2 = validarFaltaInput(elF2.value);
+    const resF3 = validarFaltaInput(elF3.value);
+
+    if (!resN1.valido) { elN1.classList.add("input-invalido"); temErro = true; }
+    if (!resN2.valido) { elN2.classList.add("input-invalido"); temErro = true; }
+    if (!resN3.valido) { elN3.classList.add("input-invalido"); temErro = true; }
+
+    if (!resF1.valido) { elF1.classList.add("input-invalido"); temErro = true; }
+    if (!resF2.valido) { elF2.classList.add("input-invalido"); temErro = true; }
+    if (!resF3.valido) { elF3.classList.add("input-invalido"); temErro = true; }
+
+    if (!temErro) {
+      novasDisciplinas.push({
+        disciplina: disciplinas[i].disciplina,
+        tri1: resN1.valor,
+        tri2: resN2.valor,
+        tri3: resN3.valor,
+        faltas: [resF1.valor, resF2.valor, resF3.valor]
+      });
+    }
+  }
+
+  if (temErro) {
+    mensagemEdicao.className = "mensagem-status erro";
+    mensagemEdicao.textContent = "Verifique os campos destacados em vermelho. Notas devem ser de 0 a 10 e faltas números inteiros.";
+    return;
+  }
+
+  mensagemEdicao.textContent = "Salvando...";
+
+  try {
+    const resposta = await fetch(`${CONFIG_ALUNO.apiUrl}/api/v1/boletins/salvar`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        turma: CONFIG_ALUNO.turma,
+        numero_chamada: CONFIG_ALUNO.numeroChamada,
+        pin: pinSessao,
+        dados: {
+          disciplinas: novasDisciplinas
+        }
+      })
+    });
+
+    if (!resposta.ok) {
+      mensagemEdicao.className = "mensagem-status erro";
+      mensagemEdicao.textContent = "Erro ao salvar alterações no servidor. Tente novamente.";
+      return;
+    }
+
+    disciplinas = novasDisciplinas;
+    atualizarTela();
+
+    fecharEdicao();
+
+  } catch (erro) {
+    mensagemEdicao.className = "mensagem-status erro";
+    mensagemEdicao.textContent = "Falha de rede ao salvar. Tente novamente.";
+  }
+}
+
+// ------------------------------------------------------------
+// EVENTOS
+// ------------------------------------------------------------
+btnEntrar.addEventListener("click", entrarNoBoletim);
+pinInput.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") entrarNoBoletim();
+});
+
+btnAlterarDados.addEventListener("click", abrirEdicao);
+btnCancelarEdicao.addEventListener("click", fecharEdicao);
+btnSalvar.addEventListener("click", salvarEdicao);
