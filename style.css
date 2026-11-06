@@ -330,7 +330,75 @@ table.tabela-edicao input.input-invalido {
   font-style: italic;
 }
 
+/* ===== ÁREA DOS GRÁFICOS ===== */
+.area-graficos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.grafico-card {
+  background-color: var(--fundo-card);
+  border: 1px solid var(--azul-principal);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grafico-card.card-perigo {
+  border-color: var(--erro);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+}
+
+.cabecalho-card-grafico {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.grafico-card h2 {
+  color: var(--azul-claro);
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.cabecalho-card-grafico h2 {
+  margin-bottom: 0;
+}
+
+.grafico-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  flex: 1;
+}
+
+.grafico-container.container-altura-media {
+  height: 420px;
+}
+
+.badge-perigo {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--erro);
+  border: 1px solid var(--erro);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
 /* ===== RESPONSIVIDADE ===== */
+@media (max-width: 900px) {
+  .area-graficos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
   .cabecalho h1 {
     font-size: 1.5rem;
@@ -346,5 +414,13 @@ table.tabela-edicao input.input-invalido {
   table.tabela-edicao td {
     padding: 8px;
     font-size: 0.8rem;
+  }
+
+  .area-graficos {
+    grid-template-columns: 1fr;
+  }
+
+  .grafico-container.container-altura-media {
+    height: 480px;
   }
 }
